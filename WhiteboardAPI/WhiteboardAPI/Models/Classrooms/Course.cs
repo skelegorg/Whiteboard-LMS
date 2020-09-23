@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace WhiteboardAPI.Models.Classrooms {
-	public class Whiteboard {
+	public class Course {
 		//hellothere
 	}
 
