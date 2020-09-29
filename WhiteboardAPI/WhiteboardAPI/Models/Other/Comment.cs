@@ -12,13 +12,13 @@ namespace WhiteboardAPI.Models.Other
 		//date and time posted
 		public DateTime _postTime { get; }
 		//user that posted the comment
-		public StudentAccount _studentAuthor { get; }
+		public Account _studentAuthor { get; }
 		//content of the comment
 		public string _content { get; set; }
-		public Comment(DateTime postTime, string content, StudentAccount studentAuthor = null)
+		public Comment(string content, Account author = null)
 		{
-			this._postTime = postTime;
-			this._studentAuthor = studentAuthor;
+			this._postTime = DateTime.Now;
+			this._studentAuthor = author;
 			this._content = content;
 		}
 	}

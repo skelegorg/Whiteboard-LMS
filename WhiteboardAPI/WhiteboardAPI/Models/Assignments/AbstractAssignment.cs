@@ -14,8 +14,8 @@ namespace WhiteboardAPI.Models.Assignments {
 		//list of submitted assignees and their grade (null until graded)
 		//stack of comments, organized by time made
 		public DateTime _dueDate { get; }
-		public Dictionary<StudentAccount, bool> assigneeStatus;
-		public Dictionary<StudentAccount, decimal> completedGrades;
+		public Dictionary<Account, bool> assigneeStatus;
+		public Dictionary<Account, decimal> completedGrades;
 		public Stack<Comment> comments;
 		
 		// The Assignment model follows the CRUD model.

@@ -7,12 +7,15 @@ using WhiteboardAPI.Models.Accounts;
 using WhiteboardAPI.Models.Other;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace WhiteboardAPI.Models.Assignments {
 	public class Announcement {
 		public string _Title { get; set; }
 		public string _Content { get; set; }
 		public Stack<Comment> Responses;
+
 		[Key]
 		public long _id { get; set; }
 	}

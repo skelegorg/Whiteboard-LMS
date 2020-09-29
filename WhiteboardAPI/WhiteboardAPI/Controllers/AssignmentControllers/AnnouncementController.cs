@@ -63,14 +63,14 @@ namespace WhiteboardAPI.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(long id)
 		{
-			var product = await _context.Announcements.FindAsync(id);
+			var announce = await _context.Announcements.FindAsync(id);
 
-			if (product == null)
+			if (announce == null)
 			{
 				return NotFound();
 			}
 
-			_context.Announcements.Remove(product);
+			_context.Announcements.Remove(announce);
 			await _context.SaveChangesAsync();
 
 			return NoContent();

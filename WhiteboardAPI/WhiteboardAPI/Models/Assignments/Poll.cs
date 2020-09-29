@@ -5,5 +5,7 @@ using System.Threading.Tasks;
 
 namespace WhiteboardAPI.Models.Assignments {
     public class Poll {
+        //Poll class
+
     }
 }

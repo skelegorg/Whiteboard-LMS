@@ -41,6 +41,19 @@ namespace WhiteboardAPI
                     logger.LogError(ex, "A database seeding error occurred.");
                 }
             }
+            var accountContext = scope.ServiceProvider.GetRequiredService<AccountContext>();
+            if (accountContext.Database.EnsureCreated())
+			{
+                try
+				{
+                    SeedAccountData.Initialize(accountContext);
+				}
+                catch (Exception ex)
+				{
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "A database seeding error occurred.");
+				}
+			}
         }
     }
 }
