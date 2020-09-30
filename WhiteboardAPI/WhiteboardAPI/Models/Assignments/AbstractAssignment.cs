@@ -5,22 +5,21 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Models.Other;
 
 namespace WhiteboardAPI.Models.Assignments {
 	public abstract class AbstractAssignment : IComparable {
 		//_dueDate set in constructor
-		public DateTime _dueDate { get; }
 		//list of assignees and whether or not they completed the assignment
-		public Dictionary<StudentAccount, bool> assigneeStatus;
 		//list of submitted assignees and their grade (null until graded)
-		public Dictionary<StudentAccount, decimal> completedGrades;
+		//stack of comments, organized by time made
+		public DateTime _dueDate { get; }
+		public Dictionary<Account, bool> assigneeStatus;
+		public Dictionary<Account, decimal> completedGrades;
+		public Stack<Comment> comments;
 		
 		// The Assignment model follows the CRUD model.
-		// In this case, I do not have a delete method and instead 
-		public abstract void DeleteAssignment() {
-			//set all values to zero in case of failure
-			_dueDate = null;
-		}
+		// In this case, I do not have a delete method and instead I make the object invisible. After 
 
 		//IComparable interface for urgency algorithm
 		public int CompareTo(object obj) {
