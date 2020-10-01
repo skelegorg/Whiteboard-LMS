@@ -7,6 +7,7 @@ using WhiteboardAPI.Data;
 using WhiteboardAPI.Models.Assignments;
 using Microsoft.EntityFrameworkCore;
 using WhiteboardAPI.Models.Accounts;
+using System.Net.Sockets;
 
 namespace WhiteboardAPI.Controllers.Other
 {
@@ -59,6 +60,16 @@ namespace WhiteboardAPI.Controllers.Other
 			await _context.SaveChangesAsync();
 
 			return NoContent();
+		}
+
+		[HttpPut("{id}/{classId}")]
+		public async Task<IActionResult> JoinClass(long classId, Account account)
+		{
+			//TODO add user to class member list in class object
+			account.joinClass(classId);
+			_context.Entry(account).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+			return Ok();
 		}
 
 		[HttpDelete("{id}")]
