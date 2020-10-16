@@ -5,46 +5,29 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Security.Policy;
 
 namespace WhiteboardAPI.Models.Accounts {
 	public class JoinedClassId {
+		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
 		[Key]
 		public long classIdNumber { get; set; }
+		// F*ck the garbage collector
+		//   |
+		//   v
+		public Account Account { get; set; }
 	}
 
-	public class Account
-	{
-		public string _name { get; set; }
-		public string _email { get; set; }
-		// F*ck the garbage collector
-		// Placeholder JoinedClassId is there to prevent the list from being deleted
-		public List<JoinedClassId> _classesJoined { get; set; } = new List<JoinedClassId> { new JoinedClassId { classIdNumber = 999999999999999 } };
-		//public List<long> _classesJoined { get; set; } = new List<long> { 99999999999999 };
+	public class Account {
+		// Actual account info
 		[Key]
 		public long _id { get; set; }
-		
-		public bool joinClass(long classId)
-		{
-			this._classesJoined.ToList().Add(new JoinedClassId { classIdNumber = classId });
-			// Delete 999999999999
-			foreach (JoinedClassId board in this._classesJoined.ToList()) {
-				if(board.classIdNumber == classId) {
-					this._classesJoined.Add(board);
-				}
-			}
-			return true;
-		}
-		
-		public bool leaveClass(long classId)
-		{
-			bool leaveStatus = false;
-			foreach(JoinedClassId board in this._classesJoined.ToList()) {
-				if(board.classIdNumber == classId) {
-					this._classesJoined.Remove(board);
-					leaveStatus = true;
-				}
-			}
-			return leaveStatus; 
-		}
+
+		public string _name { get; set; }
+		public string _email { get; set; }
+
+		public virtual ICollection<JoinedClassId> JoinedClassId { get; set; }
 	}
+
 }

@@ -38,7 +38,7 @@ namespace WhiteboardAPI.Controllers.Other
 
 			return returnAccount;
 		}
-		
+		/*
 		[HttpGet("classes/{id}")]
 		public async Task<IActionResult> GetClassesJoined(long id) {
 			var returnAccount = await _context.Accounts.FindAsync(id);
@@ -95,7 +95,7 @@ namespace WhiteboardAPI.Controllers.Other
 			
 			return Ok(account);
 		}
-		
+		*/
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(long id)
 		{
