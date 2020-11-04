@@ -38,21 +38,13 @@ namespace WhiteboardAPI.Controllers.Other
 
 			return returnAccount;
 		}
-		/*
-		[HttpGet("classes/{id}")]
-		public async Task<IActionResult> GetClassesJoined(long id) {
-			var returnAccount = await _context.Accounts.FindAsync(id);
-			List<JoinedClassId> returnList;
-			returnList = returnAccount._classesJoined;
-			return Ok(returnList);
-		}
 		
 		[HttpPost]
 		public async Task<IActionResult> Create(Account account)
 		{
 			_context.Accounts.Add(account);
 			await _context.SaveChangesAsync();
-
+			
 			return CreatedAtAction(nameof(GetByID), new { id = account._id }, account);
 		}
 
@@ -68,34 +60,6 @@ namespace WhiteboardAPI.Controllers.Other
 			return NoContent();
 		}
 		
-		[HttpPut("join/{id}/{classId}")]
-		public async Task<IActionResult> JoinClass(long id, long classId) {
-
-			var account = await _context.Accounts.FindAsync(id);
-			//TODO add account to member list in class object
-
-			account.joinClass(classId);
-
-			_context.Entry(account).State = EntityState.Modified;
-			await _context.SaveChangesAsync();
-
-			return Ok(account);
-		}
-		
-		[HttpPut("leave/{id}/{classId}")]
-		public async Task<IActionResult> LeaveClass(long id, long classId)
-		{
-			var account = await _context.Accounts.FindAsync(id);
-			//TODO remove account from member list in class object
-			
-			account.leaveClass(classId);
-			
-			_context.Entry(account).State = EntityState.Modified;
-			await _context.SaveChangesAsync();
-			
-			return Ok(account);
-		}
-		*/
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(long id)
 		{

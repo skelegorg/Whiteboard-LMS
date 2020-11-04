@@ -16,12 +16,13 @@ namespace WhiteboardAPI.Data
 		}
 
 		public DbSet<Account> Accounts { get; set; }
-
+		/*
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Account>()
 				.HasMany(j => j.JoinedClassId)
 				.WithOne(a => a.Account)
 				.IsRequired();
 		}
+		*/
 	}
 }
