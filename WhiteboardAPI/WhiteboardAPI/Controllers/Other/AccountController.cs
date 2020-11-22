@@ -8,6 +8,7 @@ using WhiteboardAPI.Models.Assignments;
 using Microsoft.EntityFrameworkCore;
 using WhiteboardAPI.Models.Accounts;
 using System.Net.Sockets;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI.Controllers.Other
 {
@@ -15,9 +16,9 @@ namespace WhiteboardAPI.Controllers.Other
 	[Route("[controller]")]
 	public class AccountController : ControllerBase
 	{
-		private readonly AccountContext _context;
+		private readonly Context _context;
 
-		public AccountController (AccountContext context)
+		public AccountController (Context context)
 		{
 			_context = context;
 		}
@@ -43,6 +44,8 @@ namespace WhiteboardAPI.Controllers.Other
 		public async Task<IActionResult> Create(Account account)
 		{
 			_context.Accounts.Add(account);
+			_context.MemberAccountIds.Add(new MemberAccountId { accountIdNumber = account._id });
+
 			await _context.SaveChangesAsync();
 			
 			return CreatedAtAction(nameof(GetByID), new { id = account._id }, account);
@@ -59,18 +62,54 @@ namespace WhiteboardAPI.Controllers.Other
 
 			return NoContent();
 		}
+
+		[HttpPut("join/{accId}/{classId}")]
+		public async Task<IActionResult> JoinClass(long classId, long accId) {
+
+			var courseToJoin = await _context.JoinedClassIds.FindAsync(classId);
+			var accToJoin = await _context.Accounts.FindAsync(accId);
+
+			if (accToJoin == null || courseToJoin == null) {
+				return NotFound();
+			}
+
+			accToJoin.JoinClass(ref courseToJoin);
+
+			_context.Entry(accToJoin).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+
+			return Ok(classId);
+		}
 		
+		[HttpPut("leave/{accId}/{classId}")]
+		public async Task<IActionResult> LeaveClass (long classId, long accId) {
+
+			var accToLeave = await _context.Accounts.FindAsync(accId);
+			var courseToLeave = await _context.JoinedClassIds.FindAsync(classId);
+
+			if (accToLeave == null || courseToLeave == null) {
+				return NotFound();
+			}
+
+			accToLeave.LeaveClass(ref courseToLeave);
+
+			_context.Entry(accToLeave).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+
+			return Ok(classId);
+		}
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(long id)
 		{
-			var announce = await _context.Accounts.FindAsync(id);
+			var announce = await _context.MemberAccountIds.FindAsync(id);
 
 			if (announce == null)
 			{
 				return NotFound();
 			}
 
-			_context.Accounts.Remove(announce);
+			_context.MemberAccountIds.Remove(announce);
 			await _context.SaveChangesAsync();
 
 			return NoContent();
