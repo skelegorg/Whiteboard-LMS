@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI.Data
 {

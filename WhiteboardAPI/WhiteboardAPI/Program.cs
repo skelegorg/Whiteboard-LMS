@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WhiteboardAPI.Data;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI
 {

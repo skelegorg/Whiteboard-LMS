@@ -28,7 +28,7 @@ namespace WhiteboardAPI.Controllers.Other
 			_context.Accounts.ToList();
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Account>> GetByID(long id)
+		public async Task<ActionResult<Account>> GetByID(int id)
 		{
 			var returnAccount = await _context.Accounts.FindAsync(id);
 
@@ -52,7 +52,7 @@ namespace WhiteboardAPI.Controllers.Other
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Update(long id, Account account) {
+		public async Task<IActionResult> Update(int id, Account account) {
 			if (id != account._id) {
 				return BadRequest();
 			}
@@ -64,7 +64,7 @@ namespace WhiteboardAPI.Controllers.Other
 		}
 
 		[HttpPut("join/{accId}/{classId}")]
-		public async Task<IActionResult> JoinClass(long classId, long accId) {
+		public async Task<IActionResult> JoinClass(int classId, int accId) {
 
 			var courseToJoin = await _context.JoinedClassIds.FindAsync(classId);
 			var accToJoin = await _context.Accounts.FindAsync(accId);
@@ -82,7 +82,7 @@ namespace WhiteboardAPI.Controllers.Other
 		}
 		
 		[HttpPut("leave/{accId}/{classId}")]
-		public async Task<IActionResult> LeaveClass (long classId, long accId) {
+		public async Task<IActionResult> LeaveClass (int classId, int accId) {
 
 			var accToLeave = await _context.Accounts.FindAsync(accId);
 			var courseToLeave = await _context.JoinedClassIds.FindAsync(classId);
@@ -100,7 +100,7 @@ namespace WhiteboardAPI.Controllers.Other
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(long id)
+		public async Task<IActionResult> Delete(int id)
 		{
 			var announce = await _context.MemberAccountIds.FindAsync(id);
 

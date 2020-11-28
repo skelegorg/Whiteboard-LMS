@@ -31,10 +31,18 @@ namespace WhiteboardAPI.Controllers.Other {
 			return Ok(course);
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> Create (string courseName) {
+		[HttpPost("Create")]
+		public async Task<IActionResult> Create (Course course) {
 			// New object, assign all user-determined values
-			var newCourse = new Course { className = courseName };
+
+			// Only allow the name to carry through to prevent a 
+			//user-determined id or join code from being generated
+			if(course.className == "" || course.className == null ) {
+				return BadRequest("No classname provided");
+			}
+			var courseNameScreen = course.className;
+
+			var newCourse = new Course { className = courseNameScreen };
 
 			// Generate new join code
 			char[] stringChars = new char[8];
@@ -49,13 +57,8 @@ namespace WhiteboardAPI.Controllers.Other {
 			// Generate new ID
 			int newIDAttempt = random.Next();
 
-			// Check if it is unique
-			var checkCourse = _context.Courses.FindAsync(newIDAttempt);
-			while(checkCourse != null) {
-				// Repeat as long as the id is not unique (the course exists)
-				newIDAttempt = random.Next();
-				checkCourse = _context.Courses.FindAsync(newIDAttempt);
-			}
+			// test
+			Console.WriteLine("hello there");
 
 			newCourse._id = newIDAttempt;
 
@@ -64,7 +67,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			await _context.SaveChangesAsync();
 
 			// Return 201
-			return CreatedAtAction(nameof(GetById), newCourse);
+			return CreatedAtAction("Create", newCourse);
 		}
 
 		[HttpPost("regenerateCode/{id}")]
@@ -82,7 +85,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			string newCode = new string(stringChars);
 
 			// If the brand spanking new join code tm is not, in fact, new
-			// reset that b*tch
+			// reset that rebellious little string of characters
 			if(newCode != currentCode) {
 				// Save the new code, save it and pop it back
 				course.joinCode = newCode;

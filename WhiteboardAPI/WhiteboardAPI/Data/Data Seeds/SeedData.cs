@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WhiteboardAPI.Models.Assignments;
-using WhiteboardAPI.Data;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI.Data
 {
