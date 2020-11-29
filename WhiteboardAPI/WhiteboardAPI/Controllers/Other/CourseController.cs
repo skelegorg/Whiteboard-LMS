@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WhiteboardAPI.Data.Other;
 using WhiteboardAPI.Models.Classrooms;
@@ -20,7 +21,7 @@ namespace WhiteboardAPI.Controllers.Other {
 		private static Random random = new Random();
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Course>> GetById (long id) {
+		public async Task<ActionResult<Course>> GetById (int id) {
 
 			var course = await _context.Courses.FindAsync(id);
 
@@ -57,21 +58,28 @@ namespace WhiteboardAPI.Controllers.Other {
 			// Generate new ID
 			int newIDAttempt = random.Next();
 
-			// test
-			Console.WriteLine("hello there");
+			// Check if the ID is unique or already taken
+			if(_context.Courses.Any(o => o._id == newIDAttempt)) {
+				return BadRequest("Internal class ID already exists- try again");
+			}
 
 			newCourse._id = newIDAttempt;
 
 			// Save changes
-			_context.Courses.Add(newCourse);
-			await _context.SaveChangesAsync();
+			try {
+				_context.Courses.Add(newCourse);
+				await _context.SaveChangesAsync();
+			} catch (Exception e) {
+				return BadRequest(e);
+			}
+			
 
 			// Return 201
 			return CreatedAtAction("Create", newCourse);
 		}
 
 		[HttpPost("regenerateCode/{id}")]
-		public async Task<IActionResult> RegenerateJoinCode (long id) {
+		public async Task<IActionResult> RegenerateJoinCode (int id) {
 
 			var course = await _context.Courses.FindAsync(id);
 			string currentCode = course.joinCode;
@@ -100,7 +108,7 @@ namespace WhiteboardAPI.Controllers.Other {
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Update(long id, Course course) {
+		public async Task<IActionResult> Update(int id, Course course) {
 			if (id != course._id) {
 				return BadRequest();
 			}
@@ -113,7 +121,7 @@ namespace WhiteboardAPI.Controllers.Other {
 		}
 
 		[HttpPut("{classId}/addMember/{accountId}")]
-		public async Task<IActionResult> AddMember(long classId, long accountId) {
+		public async Task<IActionResult> AddMember(int classId, int accountId) {
 
 			var accountToAdd = await _context.MemberAccountIds.FindAsync(accountId);
 			var classToJoin = await _context.Courses.FindAsync(classId);
@@ -131,7 +139,7 @@ namespace WhiteboardAPI.Controllers.Other {
 		}
 
 		[HttpPut("{classId}/removeMember/{accountId}")]
-		public async Task<IActionResult> RemoveMember(long classId, long accountId) {
+		public async Task<IActionResult> RemoveMember(int classId, int accountId) {
 
 			var accountToAdd = await _context.MemberAccountIds.FindAsync(accountId);
 			var classToJoin = await _context.Courses.FindAsync(classId);
@@ -149,7 +157,7 @@ namespace WhiteboardAPI.Controllers.Other {
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(long id) {
+		public async Task<IActionResult> Delete(int id) {
 			var course = await _context.Courses.FindAsync(id);
 
 			if (course == null) {
