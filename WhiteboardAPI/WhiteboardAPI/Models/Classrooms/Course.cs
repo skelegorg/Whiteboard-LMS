@@ -12,7 +12,7 @@ namespace WhiteboardAPI.Models.Classrooms {
 
 		// Basic information
 		public string className { get; set; }
-		
+		public int classOwnerAccId { get; set; }
 
 		// 8 letter/number long code
 		public string joinCode { get; set; }
@@ -56,6 +56,12 @@ namespace WhiteboardAPI.Models.Classrooms {
 		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
 		[Key]
 		public long classIdNumber { get; set; }
+		// :middle_finger:
 	}
 
+	public class CourseDto {
+		public string courseName { get; set; }
+		public string ownerName { get; set; }
+		public int courseMembercount { get; set; }
+	}
 }

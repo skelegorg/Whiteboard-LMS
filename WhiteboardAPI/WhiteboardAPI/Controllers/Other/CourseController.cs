@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using WhiteboardAPI.Models.Accounts;
 using WhiteboardAPI.Data.Other;
 using WhiteboardAPI.Models.Classrooms;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WhiteboardAPI.Controllers.Other {
 	[ApiController]
@@ -32,18 +34,42 @@ namespace WhiteboardAPI.Controllers.Other {
 			return Ok(course);
 		}
 
-		[HttpPost("Create")]
-		public async Task<IActionResult> Create (Course course) {
+		[HttpGet("{name}/{resultCount}")]
+		public async Task<IActionResult> GetByName(string name, int resultCount) {
+			//new dto that just includes course name, owner, and number of members
+			//
+			// only add the first [resultCount] results, if more requested, the program *should* not arbitrarily
+			// determine the order of results, so the next set should follow the first logically. TODO: decide what
+			// determines the order returned in. this should take place frontend to reduce request time.
+			
+			// TODO FIX THIS SHIT
+			List<CourseDto> returnList = new List<CourseDto> { };
+
+			var returns = _context.Courses.Where(course => course.className == name).ToList();
+			 
+			foreach(Course course in returns) {
+				var ownerNameObj = await _context.Accounts.FindAsync(course.classOwnerAccId);
+				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name };
+				returnList.Add(newDtoObj);
+			}
+
+			return Ok(returnList);
+		}
+
+		[HttpPost("Create/{classOwner}")]
+		public async Task<IActionResult> Create (Course course, int classOwner) {
 			// New object, assign all user-determined values
 
 			// Only allow the name to carry through to prevent a 
-			//user-determined id or join code from being generated
+			// user-determined id or join code from being generated
 			if(course.className == "" || course.className == null ) {
 				return BadRequest("No classname provided");
 			}
 			var courseNameScreen = course.className;
 
 			var newCourse = new Course { className = courseNameScreen };
+
+			newCourse.classOwnerAccId = classOwner;
 
 			// Generate new join code
 			char[] stringChars = new char[8];
