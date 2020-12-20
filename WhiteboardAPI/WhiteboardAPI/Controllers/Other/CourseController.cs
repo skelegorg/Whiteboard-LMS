@@ -34,7 +34,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			return Ok(course);
 		}
 
-		[HttpGet("{name}/{resultCount}")]
+		[HttpGet("byname/{name}/{resultCount}")]
 		public async Task<IActionResult> GetByName(string name, int resultCount) {
 			//new dto that just includes course name, owner, and number of members
 			//
@@ -42,14 +42,14 @@ namespace WhiteboardAPI.Controllers.Other {
 			// determine the order of results, so the next set should follow the first logically. TODO: decide what
 			// determines the order returned in. this should take place frontend to reduce request time.
 			
-			// TODO FIX THIS SHIT
 			List<CourseDto> returnList = new List<CourseDto> { };
 
-			var returns = _context.Courses.Where(course => course.className == name).ToList();
+			var returns = _context.Courses.Where(course => course.className == name).Take(resultCount).ToList();
 			 
 			foreach(Course course in returns) {
 				var ownerNameObj = await _context.Accounts.FindAsync(course.classOwnerAccId);
-				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name };
+				// TODO once members are implemented in courses, put in the actual number of members instead of one
+				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name, courseMembercount = 1 };
 				returnList.Add(newDtoObj);
 			}
 
@@ -94,6 +94,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			// Save changes
 			try {
 				_context.Courses.Add(newCourse);
+				_context.JoinedClassIds.Add(new JoinedClassId { classIdNumber = newCourse._id });
 				await _context.SaveChangesAsync();
 			} catch (Exception e) {
 				return BadRequest(e);
@@ -153,10 +154,15 @@ namespace WhiteboardAPI.Controllers.Other {
 			var classToJoin = await _context.Courses.FindAsync(classId);
 
 			if(accountToAdd == null || classToJoin == null) {
-				return NotFound();
+				if(accountToAdd == null) {
+					return NotFound("Account not found");
+				} else {
+					return NotFound("Class not found");
+				}
 			}
 
 			bool result = classToJoin.UserJoinsClass(ref accountToAdd);
+			
 
 			_context.Entry(classToJoin).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
 			await _context.SaveChangesAsync();

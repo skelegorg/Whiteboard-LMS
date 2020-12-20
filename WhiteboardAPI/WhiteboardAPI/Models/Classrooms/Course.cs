@@ -55,7 +55,7 @@ namespace WhiteboardAPI.Models.Classrooms {
 	public class JoinedClassId {
 		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
 		[Key]
-		public long classIdNumber { get; set; }
+		public int classIdNumber { get; set; }
 		// :middle_finger:
 	}
 

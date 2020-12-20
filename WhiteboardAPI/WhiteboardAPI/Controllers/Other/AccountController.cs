@@ -23,6 +23,8 @@ namespace WhiteboardAPI.Controllers.Other
 			_context = context;
 		}
 
+		private static Random random = new Random();
+
 		[HttpGet]
 		public ActionResult<List<Account>> GetAll() =>
 			_context.Accounts.ToList();
@@ -43,12 +45,35 @@ namespace WhiteboardAPI.Controllers.Other
 		[HttpPost]
 		public async Task<IActionResult> Create(Account account)
 		{
-			_context.Accounts.Add(account);
-			_context.MemberAccountIds.Add(new MemberAccountId { accountIdNumber = account._id });
+			if(account._email == null || account._name == null || account._email == "" || account._name == "") {
+				return BadRequest("No name/email provided.");
+			}
 
-			await _context.SaveChangesAsync();
-			
-			return CreatedAtAction(nameof(GetByID), new { id = account._id }, account);
+			var accNameScreen = account._name;
+
+			var newAccount = new Account { _name = accNameScreen };
+			newAccount._email = account._email;
+
+			int newIdAttempt = random.Next();
+
+			// Check if id is unique
+			if (_context.Accounts.Any(o => o._id == newIdAttempt)) {
+				return BadRequest("Internal account ID already exists, try again.");
+			}
+
+			newAccount._id = newIdAttempt;
+			var newMemberAccId = new MemberAccountId { accountIdNumber = newAccount._id };
+
+			// Save
+			try {
+				_context.Accounts.Add(newAccount);
+				_context.MemberAccountIds.Add(newMemberAccId);
+				await _context.SaveChangesAsync();
+			} catch (Exception e) {
+				return BadRequest(e);
+			}
+
+			return CreatedAtAction("Create", newAccount);
 		}
 
 		[HttpPut("{id}")]
@@ -68,21 +93,29 @@ namespace WhiteboardAPI.Controllers.Other
 
 			var courseToJoin = await _context.JoinedClassIds.FindAsync(classId);
 			var accToJoin = await _context.Accounts.FindAsync(accId);
+			var retStatus = false;
 
 			if (accToJoin == null || courseToJoin == null) {
 				return NotFound();
 			}
 
-			accToJoin.JoinClass(ref courseToJoin);
+			if (accToJoin.JoinedClasses.Count == 0) {
+				accToJoin.JoinedClasses.Add(courseToJoin);
+				retStatus = true;
+			} else if (!accToJoin.JoinedClasses.Contains(courseToJoin)) {
+				accToJoin.JoinedClasses.Add(courseToJoin);
+				retStatus = true;
+			}
 
-			_context.Entry(accToJoin).State = EntityState.Modified;
+			//_context.Entry(accToJoin).State = EntityState.Modified;
+			// this shit breaks it for some reason ^
 			await _context.SaveChangesAsync();
 
-			return Ok(classId);
+			return Ok(retStatus);
 		}
 		
 		[HttpPut("leave/{accId}/{classId}")]
-		public async Task<IActionResult> LeaveClass (int classId, int accId) {
+		public async Task<IActionResult> LeaveClass (int classId, int accId)	{
 
 			var accToLeave = await _context.Accounts.FindAsync(accId);
 			var courseToLeave = await _context.JoinedClassIds.FindAsync(classId);
@@ -91,7 +124,7 @@ namespace WhiteboardAPI.Controllers.Other
 				return NotFound();
 			}
 
-			accToLeave.LeaveClass(ref courseToLeave);
+			accToLeave.LeaveClass(courseToLeave);
 
 			_context.Entry(accToLeave).State = EntityState.Modified;
 			await _context.SaveChangesAsync();

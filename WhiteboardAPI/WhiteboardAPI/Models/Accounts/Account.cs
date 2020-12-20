@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Security;
 using WhiteboardAPI.Models.Classrooms;
 
 // This file creates a one-to-many relationship between many joined classes and one account.
@@ -18,25 +17,27 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _name { get; set; }
 		public string _email { get; set; }
 
-		public List<JoinedClassId> JoinedClasses { get; set; }
+		public List<JoinedClassId> JoinedClasses { get; set; } = new List<JoinedClassId> { };
 		// TODO: figure out how to do a one-to-many class relationship
 		// :middle_finger:
 
-		public bool JoinClass (ref JoinedClassId course) {
+		public bool JoinClass (JoinedClassId course) {	
 			if(course == null) {
 				return false;
 			}
-			
-			if (this.JoinedClasses.Contains(course)) {
-				return true;
-			}
 
-			this.JoinedClasses.Add(course);
+			if(JoinedClasses.Count == 0) {
+				this.JoinedClasses.Add(course);
+			} else if (!JoinedClasses.Contains(course)) {
+				this.JoinedClasses.Add(course);
+			} else {
+				return false;
+			}
 
 			return true;
 		}
 
-		public bool LeaveClass (ref JoinedClassId course) {
+		public bool LeaveClass (JoinedClassId course) {
 			if(course == null) {
 				return false;
 			}
@@ -59,6 +60,6 @@ namespace WhiteboardAPI.Models.Accounts {
 		//
 		// f*ck
 		[Key]
-		public long accountIdNumber { get; set; }
+		public int accountIdNumber { get; set; }
 	}
 }
