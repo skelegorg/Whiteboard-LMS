@@ -3,13 +3,13 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WhiteboardAPI.Models.Assignments;
-using WhiteboardAPI.Data;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI.Data
 {
 	public static class SeedData
 	{
-		public static void Initialize(AnnouncementContext context)
+		public static void Initialize(Context context)
 		{
 			if (!context.Announcements.Any())
 			{

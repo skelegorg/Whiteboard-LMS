@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WhiteboardAPI.Data;
+using WhiteboardAPI.Data.Other;
 using WhiteboardAPI.Models.Assignments;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +13,9 @@ namespace WhiteboardAPI.Controllers
 	[Route("[controller]")]
 	public class AnnouncementController : ControllerBase
 	{
-		private readonly AnnouncementContext _context;
+		private readonly Context _context;
 
-		public AnnouncementController(AnnouncementContext context)
+		public AnnouncementController(Context context)
 		{
 			_context = context;
 		}

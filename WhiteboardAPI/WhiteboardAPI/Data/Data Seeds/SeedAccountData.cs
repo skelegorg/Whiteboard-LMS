@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI.Data
 {
 	public class SeedAccountData
 	{
-		public static void Initialize(AccountContext context)
+		public static void Initialize(Context context)
 		{
 			if (!context.Accounts.Any())
 			{

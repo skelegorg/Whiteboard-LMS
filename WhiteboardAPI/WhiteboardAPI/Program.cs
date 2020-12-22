@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WhiteboardAPI.Data;
+using WhiteboardAPI.Data.Other;
 
 namespace WhiteboardAPI
 {
@@ -27,7 +28,7 @@ namespace WhiteboardAPI
         {
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AnnouncementContext>();
+            var context = scope.ServiceProvider.GetRequiredService<Context>();
 
             if (context.Database.EnsureCreated())
             {
@@ -41,7 +42,7 @@ namespace WhiteboardAPI
                     logger.LogError(ex, "A database seeding error occurred.");
                 }
             }
-            var accountContext = scope.ServiceProvider.GetRequiredService<AccountContext>();
+            var accountContext = scope.ServiceProvider.GetRequiredService<Context>();
             if (accountContext.Database.EnsureCreated())
 			{
                 try
