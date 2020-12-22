@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using WhiteboardAPI.Models.Accounts;
 using WhiteboardAPI.Data.Other;
+using WhiteboardAPI.Resources;
 using WhiteboardAPI.Models.Classrooms;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,7 +50,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			foreach(Course course in returns) {
 				var ownerNameObj = await _context.Accounts.FindAsync(course.classOwnerAccId);
 				// TODO once members are implemented in courses, put in the actual number of members instead of one
-				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name, courseMembercount = 1 };
+				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name, courseMembercount = course.joinedMemberIds.Count };
 				returnList.Add(newDtoObj);
 			}
 
@@ -88,7 +89,7 @@ namespace WhiteboardAPI.Controllers.Other {
 			if(_context.Courses.Any(o => o._id == newIDAttempt)) {
 				return BadRequest("Internal class ID already exists- try again");
 			}
-
+			
 			newCourse._id = newIDAttempt;
 
 			// Save changes
@@ -97,6 +98,7 @@ namespace WhiteboardAPI.Controllers.Other {
 				_context.JoinedClassIds.Add(new JoinedClassId { classIdNumber = newCourse._id });
 				await _context.SaveChangesAsync();
 			} catch (Exception e) {
+				ErrorLogger.logError(e);
 				return BadRequest(e);
 			}
 			
@@ -163,9 +165,12 @@ namespace WhiteboardAPI.Controllers.Other {
 
 			bool result = classToJoin.UserJoinsClass(ref accountToAdd);
 			
-
 			_context.Entry(classToJoin).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-			await _context.SaveChangesAsync();
+			try {
+				await _context.SaveChangesAsync();
+			} catch (Exception e) {
+				ErrorLogger.logError(e);
+			}
 
 			return Ok(result);
 		}

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace WhiteboardAPI.Resources {
-	public static class errorLogger {
+	public static class ErrorLogger {
 		static string filePath = @"Resources\errorLog.txt";
 		public async static void logError (Exception e) {
 			if(File.Exists(filePath)) {
