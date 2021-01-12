@@ -20,10 +20,6 @@ namespace WhiteboardAPI.Controllers
 			_context = context;
 		}
 
-		[HttpGet]
-		public ActionResult<List<Announcement>> GetAll() =>
-			_context.Announcements.ToList();
-
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Announcement>> GetByID(long id)
 		{
