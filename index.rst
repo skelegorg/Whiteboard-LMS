@@ -62,11 +62,17 @@ Announcement:
 	/Assignments 
 	body must be an assignment object in JSON format
 
-	edit: PUT request
-	/Assignments
+	update: PUT request
+	/Assignments/{id}
 	body must be an assignment object in JSON format
 	
+	delete: DELETE request
+	/Assignments/{id}
+	
 Poll:
+	
+	Simple voting system, create 2-10 options and have class members vote on them.
+	Voting can lock at a certain date/time - togglable at creation
 	
 	Does not inherit from AbstractAssignment
 	Polls have a
@@ -74,11 +80,14 @@ Poll:
 	- content
 	- stack of comments
 	- list of PollOption objects that are chooseable by users
+	- anonymous/not anonymous toggle
 
 	PollOption: 
 		Does not inherit from anything
-		
-	
+		PollOptions have an 
+		- option
+		- vote count 
+		- list of voter names (if poll is anonymous then the names simply are not accessed)
 	
 	
 	
