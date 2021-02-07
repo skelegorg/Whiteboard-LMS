@@ -56,18 +56,18 @@ Announcement:
 	
 	Http requests:
 	get by id: GET request 
-	/Assignments/{id}
+	/Announcements/{id}
 	
 	create: POST request
-	/Assignments 
+	/Announcements 
 	body must be an assignment object in JSON format
 
 	update: PUT request
-	/Assignments/{id}
+	/Announcements/{id}
 	body must be an assignment object in JSON format
 	
 	delete: DELETE request
-	/Assignments/{id}
+	/Announcements/{id}
 	
 Poll:
 	
@@ -90,6 +90,29 @@ Poll:
 		- list of voter names (if poll is anonymous then the names simply are not accessed)
 	
 	
-	
-	
-	
+	Requests:
+	get by id: /Poll/{id} - GET request
+
+	create: /Poll - POST request
+	passes a poll object - note that the ID passed does not end up being the ID of the object.
+
+	delete: /Poll/{id} - DELETE request
+	pass the id and if the object exists, it is deleted.
+
+	edit: /Poll/{id} - PUT request
+	pass the id and also a Poll object.
+
+	add a vote: /Poll/{id}/{func} - PUT request
+	pass the id and a PollVote object.
+
+
+		PollVote object example: 
+		{
+			"optName" : "Option One",
+			"voter": "Jimmy"
+		}
+
+---
+Courses
+---
+	e

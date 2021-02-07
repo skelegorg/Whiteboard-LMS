@@ -18,8 +18,6 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _email { get; set; }
 
 		public List<JoinedClassId> JoinedClasses { get; set; } = new List<JoinedClassId> { };
-		// TODO: figure out how to do a one-to-many class relationship
-		// :middle_finger:
 
 		public bool JoinClass (JoinedClassId course) {	
 			if(course == null) {
