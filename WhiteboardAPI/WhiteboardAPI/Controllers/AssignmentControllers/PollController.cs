@@ -20,7 +20,7 @@ namespace WhiteboardAPI.Controllers {
 			_context = context;
 		}
 
-		static Random rand = new Random();
+		static readonly Random  rand = new Random();
 
 		// Adding/retracting a vote:
 		public class PollVote {
@@ -83,9 +83,41 @@ namespace WhiteboardAPI.Controllers {
 		// Adding/subtracting a vote
 		[HttpPut("{id}/{func}")]
 		public async Task<IActionResult> Vote(int id, string func, PollVote voteObj) {
+			// get the poll and parse the PollVote obj - append voter names and votes to the proper  
+			var poll = await _context.Polls.FindAsync(id);
+			bool optfound = false;
 
+			foreach(var pollopt in poll.options) {
+				if(pollopt.optName == voteObj.optName) {
+					// option found, update the obj
+					if(func == "add") {
+						// add voter name and vote
+						pollopt.votes++;
+						pollopt.voterNames.Add(voteObj.voter);
+					} else if (func == "sub") {
+						// remove it
+						pollopt.votes--;
+						if(pollopt.voterNames.Contains(voteObj.voter)) {
+							pollopt.voterNames.Remove(voteObj.voter);
+						} else {
+							// no voter exists
+							return NotFound($"No vote recorded from user: {voteObj.voter}");
+						}
+					} else {
+						return NotFound($"Invalid vote function given: {func}");
+					}
+					optfound = true;
+				}
+			}
+
+			if(optfound == false) {
+				return NotFound($"No valid poll option found: {voteObj.optName}");
+			}
+
+			// why are ternary operator statements so satisfying
 			return Ok($"{voteObj.voter}'s vote {(func == "add" ? "added" : "removed")}");
 		}
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id) {
 			var attemptedPoll = await _context.Polls.FindAsync(id);
