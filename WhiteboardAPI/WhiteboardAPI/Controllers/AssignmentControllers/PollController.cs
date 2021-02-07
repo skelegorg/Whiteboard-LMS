@@ -90,18 +90,19 @@ namespace WhiteboardAPI.Controllers {
 			foreach(var pollopt in poll.options) {
 				if(pollopt.optName == voteObj.optName) {
 					// option found, update the obj
+					stringContainer voter = new stringContainer { stringCon = voteObj.voter };
 					if(func == "add") {
 						// add voter name and vote
 						pollopt.votes++;
-						pollopt.voterNames.Add(voteObj.voter);
+						pollopt.voterNames.Add(voter);
 					} else if (func == "sub") {
 						// remove it
 						pollopt.votes--;
-						if(pollopt.voterNames.Contains(voteObj.voter)) {
-							pollopt.voterNames.Remove(voteObj.voter);
+						if(pollopt.voterNames.Contains(voter)) {
+							pollopt.voterNames.Remove(voter);
 						} else {
 							// no voter exists
-							return NotFound($"No vote recorded from user: {voteObj.voter}");
+							return NotFound($"No vote recorded from user: {voter.stringCon}");
 						}
 					} else {
 						return NotFound($"Invalid vote function given: {func}");
