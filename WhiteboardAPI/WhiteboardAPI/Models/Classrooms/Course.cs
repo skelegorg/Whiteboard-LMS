@@ -1,6 +1,7 @@
 ﻿// Using directives
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using WhiteboardAPI.Models.Accounts;
 
 namespace WhiteboardAPI.Models.Classrooms {
@@ -52,9 +53,9 @@ namespace WhiteboardAPI.Models.Classrooms {
 	// version 5 of EFCore, as of now EFCore 3.1.9 is the latest version (11 / 5 / 2020)
 	//
 	// its stupid
+	[Keyless]
 	public class JoinedClassId {
 		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
-		[Key]
 		public int classIdNumber { get; set; }
 		// :middle_finger:
 	}

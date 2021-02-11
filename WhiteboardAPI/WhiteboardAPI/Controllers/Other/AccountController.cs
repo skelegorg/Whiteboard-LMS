@@ -100,10 +100,10 @@ namespace WhiteboardAPI.Controllers.Other
 			}
 
 			if (accToJoin.JoinedClasses.Count == 0) {
-				accToJoin.JoinedClasses.Add(courseToJoin);
+				accToJoin.JoinedClasses.Enqueue(courseToJoin);
 				retStatus = true;
 			} else if (!accToJoin.JoinedClasses.Contains(courseToJoin)) {
-				accToJoin.JoinedClasses.Add(courseToJoin);
+				accToJoin.JoinedClasses.Enqueue(courseToJoin);
 				retStatus = true;
 			}
 

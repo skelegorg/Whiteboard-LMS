@@ -3,12 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WhiteboardAPI.Models.Classrooms;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
 
 // This file creates a one-to-many relationship between many joined classes and one account.
 // Unfortunately
 // Theres no such thing as a dbset for longs :smh:
 
 namespace WhiteboardAPI.Models.Accounts {
+
+	public class AccountContext : DbContext {
+		public AccountContext(DbContextOptions<AccountContext> options)
+			: base(options) {
+		}
+
+		public DbSet<Account> Accounts { get; set; }
+		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Account>()
+				.HasMany(acc => acc.JoinedClasses);
+			modelBuilder.Entity<JoinedClassId>()
+				.HasNoKey()
+				.Property(v => v.classIdNumber).HasColumnName("classIdNum");
+		}
+	}
+
 	public class Account {
 		// Actual account info
 		[Key]
@@ -17,7 +38,7 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _name { get; set; }
 		public string _email { get; set; }
 
-		public List<JoinedClassId> JoinedClasses { get; set; } = new List<JoinedClassId> { };
+		public Queue<JoinedClassId> JoinedClasses { get; set; }
 
 		public bool JoinClass (JoinedClassId course) {	
 			if(course == null) {
@@ -25,9 +46,9 @@ namespace WhiteboardAPI.Models.Accounts {
 			}
 
 			if(JoinedClasses.Count == 0) {
-				this.JoinedClasses.Add(course);
+				this.JoinedClasses.Enqueue(course);
 			} else if (!JoinedClasses.Contains(course)) {
-				this.JoinedClasses.Add(course);
+				this.JoinedClasses.Enqueue(course);
 			} else {
 				return false;
 			}
@@ -41,8 +62,8 @@ namespace WhiteboardAPI.Models.Accounts {
 			}
 
 			if (this.JoinedClasses.Contains(course)) {
-				
-				this.JoinedClasses.Remove(course);
+
+				this.JoinedClasses = new Queue<JoinedClassId>(this.JoinedClasses.Where(x => x != course));
 				return true;
 
 			} else {
@@ -53,11 +74,6 @@ namespace WhiteboardAPI.Models.Accounts {
 	}
 
 	public class MemberAccountId {
-		// Unfortunately, security is a thing
-		// And you shouldn't just be able to join a random board
-		//
-		// f*ck
-		[Key]
 		public int accountIdNumber { get; set; }
 	}
 }

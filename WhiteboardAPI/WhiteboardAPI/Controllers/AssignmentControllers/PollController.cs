@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WhiteboardAPI.Data.Other;
+using WhiteboardAPI.Models.Other;
 using WhiteboardAPI.Models.Assignments;
 using WhiteboardAPI.Resources;
 
@@ -14,9 +14,9 @@ namespace WhiteboardAPI.Controllers {
 	[Route("[controller]")]
 	public class PollController : ControllerBase {
 
-		private readonly Context _context;
+		private readonly PollContext _context;
 
-		public PollController(Context context) {
+		public PollController(PollContext context) {
 			_context = context;
 		}
 
@@ -90,7 +90,7 @@ namespace WhiteboardAPI.Controllers {
 			foreach(var pollopt in poll.options) {
 				if(pollopt.optName == voteObj.optName) {
 					// option found, update the obj
-					stringContainer voter = new stringContainer { stringCon = voteObj.voter };
+					voterName voter = new voterName { name = voteObj.voter };
 					if(func == "add") {
 						// add voter name and vote
 						pollopt.votes++;
@@ -102,7 +102,7 @@ namespace WhiteboardAPI.Controllers {
 							pollopt.voterNames.Remove(voter);
 						} else {
 							// no voter exists
-							return NotFound($"No vote recorded from user: {voter.stringCon}");
+							return NotFound($"No vote recorded from user: {voter.name}");
 						}
 					} else {
 						return NotFound($"Invalid vote function given: {func}");
