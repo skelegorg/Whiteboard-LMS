@@ -40,7 +40,6 @@ namespace WhiteboardAPI.Controllers {
 
 		[HttpPost]
 		public async Task<IActionResult> Create(Poll poll) {
-			//TODO: code that generates id and stuff
 			var newPoll = poll;
 			int newIDAttempt = rand.Next();
 

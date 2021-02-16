@@ -46,17 +46,13 @@ namespace WhiteboardAPI.Models.Classrooms {
 		}
 	}
 
-
-	// Primitive data types need a table for themselves this is rediculous
-	// Also for my future self I need to gripe about keyless data types which are
-	// in the EFCore documentation - a preemptively documented a feature that won't be added until
-	// version 5 of EFCore, as of now EFCore 3.1.9 is the latest version (11 / 5 / 2020)
-	//
-	// its stupid
-	[Keyless]
 	public class JoinedClassId {
-		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
+		[Key]
+		public int _id { get; set; }
 		public int classIdNumber { get; set; }
+		public int AccId { get; set; } // foreign key
+
+		public Account Account { get; set; }
 		// :middle_finger:
 	}
 

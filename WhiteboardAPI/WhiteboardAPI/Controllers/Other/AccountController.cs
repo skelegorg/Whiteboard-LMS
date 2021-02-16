@@ -16,9 +16,9 @@ namespace WhiteboardAPI.Controllers.Other
 	[Route("[controller]")]
 	public class AccountController : ControllerBase
 	{
-		private readonly Context _context;
+		private readonly AccountContext _context;
 
-		public AccountController (Context context)
+		public AccountController (AccountContext context)
 		{
 			_context = context;
 		}
@@ -67,7 +67,7 @@ namespace WhiteboardAPI.Controllers.Other
 			// Save
 			try {
 				_context.Accounts.Add(newAccount);
-				_context.MemberAccountIds.Add(newMemberAccId);
+				//_context.MemberAccountIds.Add(newMemberAccId);
 				await _context.SaveChangesAsync();
 			} catch (Exception e) {
 				return BadRequest(e);
@@ -98,7 +98,8 @@ namespace WhiteboardAPI.Controllers.Other
 			if (accToJoin == null || courseToJoin == null) {
 				return NotFound();
 			}
-
+			// TODO REMOVE COMMENT
+			/*
 			if (accToJoin.JoinedClasses.Count == 0) {
 				accToJoin.JoinedClasses.Enqueue(courseToJoin);
 				retStatus = true;
@@ -106,7 +107,7 @@ namespace WhiteboardAPI.Controllers.Other
 				accToJoin.JoinedClasses.Enqueue(courseToJoin);
 				retStatus = true;
 			}
-
+			*/
 			//_context.Entry(accToJoin).State = EntityState.Modified;
 			// this shit breaks it for some reason ^
 			await _context.SaveChangesAsync();
@@ -124,14 +125,14 @@ namespace WhiteboardAPI.Controllers.Other
 				return NotFound();
 			}
 
-			accToLeave.LeaveClass(courseToLeave);
+			//accToLeave.LeaveClass(courseToLeave);
 
 			_context.Entry(accToLeave).State = EntityState.Modified;
 			await _context.SaveChangesAsync();
 
 			return Ok(classId);
 		}
-
+		/*
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
@@ -147,5 +148,6 @@ namespace WhiteboardAPI.Controllers.Other
 
 			return NoContent();
 		}
+		*/
 	}
 }

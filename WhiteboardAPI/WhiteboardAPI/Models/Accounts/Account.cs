@@ -20,13 +20,13 @@ namespace WhiteboardAPI.Models.Accounts {
 
 		public DbSet<Account> Accounts { get; set; }
 		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+		// bc nothing can be simple, can't wait for efcore 5
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			modelBuilder.Entity<Account>()
-				.HasMany(acc => acc.JoinedClasses);
-			modelBuilder.Entity<JoinedClassId>()
-				.HasNoKey()
-				.Property(v => v.classIdNumber).HasColumnName("classIdNum");
+				.HasMany(acc => acc.JoinedClasses)
+				.WithOne(jcid => jcid.Account)
+				.HasForeignKey(p => p.AccId);
 		}
 	}
 
@@ -38,14 +38,15 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _name { get; set; }
 		public string _email { get; set; }
 
-		public Queue<JoinedClassId> JoinedClasses { get; set; }
-
-		public bool JoinClass (JoinedClassId course) {	
-			if(course == null) {
+		public ICollection<JoinedClassId> JoinedClasses { get; set; }
+		//public virtual ICollection<AccountJoinedClassId> AccJoinedClasses { get; set; }
+		/*
+		public bool JoinClass(JoinedClassId course) {
+			if (course == null) {
 				return false;
 			}
 
-			if(JoinedClasses.Count == 0) {
+			if (JoinedClasses.Count == 0) {
 				this.JoinedClasses.Enqueue(course);
 			} else if (!JoinedClasses.Contains(course)) {
 				this.JoinedClasses.Enqueue(course);
@@ -56,8 +57,8 @@ namespace WhiteboardAPI.Models.Accounts {
 			return true;
 		}
 
-		public bool LeaveClass (JoinedClassId course) {
-			if(course == null) {
+		public bool LeaveClass(JoinedClassId course) {
+			if (course == null) {
 				return false;
 			}
 
@@ -71,6 +72,7 @@ namespace WhiteboardAPI.Models.Accounts {
 				return false;
 			}
 		}
+		*/
 	}
 
 	public class MemberAccountId {

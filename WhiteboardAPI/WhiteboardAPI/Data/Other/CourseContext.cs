@@ -29,8 +29,8 @@ namespace WhiteboardAPI.Data.Other {
 					eb.HasMany(co => co.joinedMemberIds);
 				}
 			);
-			modelBuilder.Entity<Account>()
-				.HasMany(acc => acc.JoinedClasses);
+			//modelBuilder.Entity<Account>()
+			//	.HasMany(acc => acc.JoinedClasses);
 		}
 	}
 }
