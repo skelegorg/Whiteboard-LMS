@@ -1,9 +1,29 @@
 ﻿// Using directives
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using WhiteboardAPI.Models.Accounts;
 
 namespace WhiteboardAPI.Models.Classrooms {
+	public class CourseContext : DbContext {
+		public CourseContext(DbContextOptions<CourseContext> options)
+			: base(options) {
+		}
+
+		public DbSet<Course> Courses { get; set; }
+		public DbSet<Account> Accounts { get; set; }
+
+		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+		public DbSet<MemberAccountId> MemberAccountIds { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Course>()
+				.HasMany(c => c.joinedMemberIds)
+				.WithOne(jmi => jmi.Course)
+				.HasForeignKey(jmi => jmi.CourseId);
+		}
+	}
+
 	public class Course {
 		[Key]
 		public int _id { get; set; }
@@ -45,17 +65,13 @@ namespace WhiteboardAPI.Models.Classrooms {
 		}
 	}
 
-
-	// Primitive data types need a table for themselves this is rediculous
-	// Also for my future self I need to gripe about keyless data types which are
-	// in the EFCore documentation - a preemptively documented a feature that won't be added until
-	// version 5 of EFCore, as of now EFCore 3.1.9 is the latest version (11 / 5 / 2020)
-	//
-	// its stupid
 	public class JoinedClassId {
-		// This class allows a list of longs to exist in an albeit roundabout fashion -_-
 		[Key]
+		public int _id { get; set; }
 		public int classIdNumber { get; set; }
+		public int AccId { get; set; } // foreign key
+
+		public Account Account { get; set; }
 		// :middle_finger:
 	}
 

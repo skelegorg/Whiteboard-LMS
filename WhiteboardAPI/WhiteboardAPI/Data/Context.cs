@@ -16,6 +16,7 @@ namespace WhiteboardAPI.Data.Other {
 		public DbSet<Course> Courses { get; set; }
 
 		public DbSet<Announcement> Announcements { get; set; }
+		public DbSet<Poll> Polls { get; set; }
 
 		public DbSet<Account> Accounts { get; set; }
 

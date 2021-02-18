@@ -4,7 +4,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WhiteboardAPI.Data;
-using WhiteboardAPI.Data.Other;
+using WhiteboardAPI.Data.Data_Seeds;
+using WhiteboardAPI.Resources;
+using WhiteboardAPI.Models.Assignments;
+using WhiteboardAPI.Models.Accounts;
 
 namespace WhiteboardAPI
 {
@@ -28,31 +31,37 @@ namespace WhiteboardAPI
         {
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<Context>();
+            var announcementContext = scope.ServiceProvider.GetRequiredService<AnnouncementContext>();
 
-            if (context.Database.EnsureCreated())
-            {
-                try
-                {
-                    SeedData.Initialize(context);
+            if (announcementContext.Database.EnsureCreated()) {
+                try {
+                    SeedData.Initialize(announcementContext);
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "A database seeding error occurred.");
+                    ErrorLogger.logError(ex);
                 }
             }
-            var accountContext = scope.ServiceProvider.GetRequiredService<Context>();
-            if (accountContext.Database.EnsureCreated())
-			{
-                try
-				{
+            var accountContext = scope.ServiceProvider.GetRequiredService<AccountContext>();
+            if (accountContext.Database.EnsureCreated()) {
+                try {
                     SeedAccountData.Initialize(accountContext);
 				}
-                catch (Exception ex)
-				{
+                catch (Exception ex) {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "A database seeding error occurred.");
+                    ErrorLogger.logError(ex);
+                }
+            }
+            var pollContext = scope.ServiceProvider.GetRequiredService<PollContext>();
+            if (pollContext.Database.EnsureCreated()) {
+                try {
+                    SeedPollData.Initialize(pollContext);
+				} catch (Exception e) {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(e, "Poll seeding failed.");
+                    ErrorLogger.logError(e);
 				}
 			}
         }

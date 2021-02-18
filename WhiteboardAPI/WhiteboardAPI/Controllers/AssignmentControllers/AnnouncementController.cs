@@ -13,19 +13,15 @@ namespace WhiteboardAPI.Controllers
 	[Route("[controller]")]
 	public class AnnouncementController : ControllerBase
 	{
-		private readonly Context _context;
+		private readonly AnnouncementContext _context;
 
-		public AnnouncementController(Context context)
+		public AnnouncementController(AnnouncementContext context)
 		{
 			_context = context;
 		}
 
-		[HttpGet]
-		public ActionResult<List<Announcement>> GetAll() =>
-			_context.Announcements.ToList();
-
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Announcement>> GetByID(long id)
+		public async Task<ActionResult<Announcement>> GetByID(int id)
 		{
 			var returnAnnouncement = await _context.Announcements.FindAsync(id);
 

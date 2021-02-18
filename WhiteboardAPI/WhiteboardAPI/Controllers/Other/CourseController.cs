@@ -49,7 +49,6 @@ namespace WhiteboardAPI.Controllers.Other {
 			 
 			foreach(Course course in returns) {
 				var ownerNameObj = await _context.Accounts.FindAsync(course.classOwnerAccId);
-				// TODO once members are implemented in courses, put in the actual number of members instead of one
 				var newDtoObj = new CourseDto { courseName = course.className, ownerName = ownerNameObj._name, courseMembercount = course.joinedMemberIds.Count };
 				returnList.Add(newDtoObj);
 			}
@@ -87,7 +86,7 @@ namespace WhiteboardAPI.Controllers.Other {
 
 			// Check if the ID is unique or already taken
 			if(_context.Courses.Any(o => o._id == newIDAttempt)) {
-				return BadRequest("Internal class ID already exists- try again");
+				return BadRequest("Internal ID already exists- try again");
 			}
 			
 			newCourse._id = newIDAttempt;
@@ -202,6 +201,8 @@ namespace WhiteboardAPI.Controllers.Other {
 			}
 
 			_context.Courses.Remove(course);
+
+			await _context.SaveChangesAsync();
 
 			return NoContent();
 		}
