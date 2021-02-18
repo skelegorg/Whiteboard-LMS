@@ -5,6 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using WhiteboardAPI.Models.Accounts;
 
 namespace WhiteboardAPI.Models.Classrooms {
+	public class CourseContext : DbContext {
+		public CourseContext(DbContextOptions<CourseContext> options)
+			: base(options) {
+		}
+
+		public DbSet<Course> Courses { get; set; }
+		public DbSet<Account> Accounts { get; set; }
+
+		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+		public DbSet<MemberAccountId> MemberAccountIds { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Course>()
+				.HasMany(c => c.joinedMemberIds)
+				.WithOne(jmi => jmi.Course)
+				.HasForeignKey(jmi => jmi.CourseId);
+		}
+	}
+
 	public class Course {
 		[Key]
 		public int _id { get; set; }

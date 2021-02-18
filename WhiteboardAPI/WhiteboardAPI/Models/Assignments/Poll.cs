@@ -20,23 +20,16 @@ namespace WhiteboardAPI.Models.Assignments {
 		// TODO: check if a member is enrolled in the class that the poll is part of
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
-			modelBuilder.Entity<Poll>(
-				eb => {
-					eb.HasMany(poll => poll.options);
-				});
-			modelBuilder.Entity<PollOption>(
-				eb => {
-					eb.HasNoKey();
-					eb.Property(v => v.optName).HasColumnName("OptName");
-					eb.HasMany(pollOpt => pollOpt.voterNames);
-				});
-			modelBuilder.Entity<voterName>(
-				eb =>
-				{
-					eb.HasNoKey();
-					eb.Property(v => v.name).HasColumnName("Name");
-				});
-		}
+			modelBuilder.Entity<Poll>()
+				.HasMany(poll => poll.options)
+				.WithOne(jcid => jcid.Poll)
+				.HasForeignKey(p => p.PollId);
+
+			modelBuilder.Entity<PollOption>()
+				.HasMany(pollOpt => pollOpt.voterNames)	
+				.WithOne(vname => vname.PollOption)
+				.HasForeignKey(v => v.PollOptId);				
+	    }
 	}
 
 	public class Poll {
@@ -64,14 +57,25 @@ namespace WhiteboardAPI.Models.Assignments {
 		public Queue<PollOption> options { get; set; }
 		 
 	}
-	[Keyless]
+	
 	public class voterName {
+		[Key]
+		public int _id { get; set; }
+		// for the one-to-many relationship
+		public PollOption PollOption { get; set; }
+		public int PollOptId { get; set; }
 		public string name { get; set; }
+
 	}
-	[Keyless]
+	
 	public class PollOption {
+		[Key]
+		public int _id { get; set; } 
 		public string optName { get; set; }
 		public int votes { get; set; }
+		// for the one-to-many relationship
+		public Poll Poll { get; set; }
+		public int PollId { get; set; }
 		public List<voterName> voterNames { get; set; }
 		//TODO: add color?
 	}

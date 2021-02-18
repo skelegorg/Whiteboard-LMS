@@ -11,6 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace WhiteboardAPI.Models.Assignments {
+	public class AnnouncementContext : DbContext {
+		public AnnouncementContext(DbContextOptions<AnnouncementContext> options)
+			: base(options) {
+		}
+
+		public DbSet<Announcement> Announcements { get; set; }
+	}
+
 	public class Announcement {
 		public string _Title { get; set; }
 		public string _Content { get; set; }

@@ -1,5 +1,4 @@
-﻿// Using directives
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WhiteboardAPI.Models.Classrooms;
@@ -38,18 +37,18 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _name { get; set; }
 		public string _email { get; set; }
 
-		public ICollection<JoinedClassId> JoinedClasses { get; set; }
-		//public virtual ICollection<AccountJoinedClassId> AccJoinedClasses { get; set; }
-		/*
+		public List<JoinedClassId> JoinedClasses { get; set; }
+
+
 		public bool JoinClass(JoinedClassId course) {
 			if (course == null) {
 				return false;
 			}
 
 			if (JoinedClasses.Count == 0) {
-				this.JoinedClasses.Enqueue(course);
+				this.JoinedClasses.Add(course);
 			} else if (!JoinedClasses.Contains(course)) {
-				this.JoinedClasses.Enqueue(course);
+				this.JoinedClasses.Add(course);
 			} else {
 				return false;
 			}
@@ -64,7 +63,7 @@ namespace WhiteboardAPI.Models.Accounts {
 
 			if (this.JoinedClasses.Contains(course)) {
 
-				this.JoinedClasses = new Queue<JoinedClassId>(this.JoinedClasses.Where(x => x != course));
+				this.JoinedClasses = new List<JoinedClassId>(this.JoinedClasses.Where(x => x != course));
 				return true;
 
 			} else {
@@ -72,10 +71,15 @@ namespace WhiteboardAPI.Models.Accounts {
 				return false;
 			}
 		}
-		*/
+
 	}
 
 	public class MemberAccountId {
+		[Key]
+		public int _id { get; set; }
 		public int accountIdNumber { get; set; }
+		public Course Course { get; set; }
+		public int CourseId { get; set; }
 	}
 }
+

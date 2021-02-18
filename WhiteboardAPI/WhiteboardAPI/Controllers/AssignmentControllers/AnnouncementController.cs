@@ -13,9 +13,9 @@ namespace WhiteboardAPI.Controllers
 	[Route("[controller]")]
 	public class AnnouncementController : ControllerBase
 	{
-		private readonly Context _context;
+		private readonly AnnouncementContext _context;
 
-		public AnnouncementController(Context context)
+		public AnnouncementController(AnnouncementContext context)
 		{
 			_context = context;
 		}

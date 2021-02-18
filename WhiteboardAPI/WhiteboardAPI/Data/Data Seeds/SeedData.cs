@@ -9,7 +9,7 @@ namespace WhiteboardAPI.Data
 {
 	public static class SeedData
 	{
-		public static void Initialize(Context context)
+		public static void Initialize(AnnouncementContext context)
 		{
 			if (!context.Announcements.Any())
 			{
