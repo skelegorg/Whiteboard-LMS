@@ -12,7 +12,7 @@ namespace WhiteboardAPI.Resources {
 			if(File.Exists(filePath)) {
 				DateTime localDateTime = DateTime.Now;
 				// The format name is stupidly long
-				string errorContents = localDateTime.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + e.Message;
+				string errorContents = "\n" + localDateTime.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + e.Message;
 				await File.AppendAllTextAsync(filePath, errorContents);
 			} else {
 				File.Create(filePath);

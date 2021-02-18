@@ -7,7 +7,7 @@ namespace WhiteboardAPI.Data
 {
 	public class SeedAccountData
 	{
-		public static void Initialize(Context context)
+		public static void Initialize(AccountContext context)
 		{
 			if (!context.Accounts.Any())
 			{

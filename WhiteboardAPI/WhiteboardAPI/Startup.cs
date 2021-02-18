@@ -11,7 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using WhiteboardAPI.Data.Other;
+using WhiteboardAPI.Models.Assignments;
+using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Models.Classrooms;
 
 namespace WhiteboardAPI {
     public class Startup {
@@ -23,9 +25,16 @@ namespace WhiteboardAPI {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddDbContext<Context>(options =>
-        options.UseInMemoryDatabase("WhiteboardAPI"));
-            services.AddControllers();
+	        services.AddDbContext<AnnouncementContext>(options =>
+		        options.UseInMemoryDatabase("WhiteboardAPI"));
+	        services.AddDbContext<CourseContext>(options =>
+		        options.UseInMemoryDatabase("WhiteboardAPI"));
+            services.AddDbContext<PollContext>(options =>
+                options.UseInMemoryDatabase("WhiteboardAPI"));
+	        services.AddDbContext<AccountContext>(options =>
+		        
+            options.UseInMemoryDatabase("WhiteboardAPI"));
+            services.AddControllers(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

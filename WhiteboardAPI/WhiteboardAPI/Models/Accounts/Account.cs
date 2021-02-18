@@ -1,14 +1,34 @@
-﻿// Using directives
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WhiteboardAPI.Models.Classrooms;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
 
 // This file creates a one-to-many relationship between many joined classes and one account.
 // Unfortunately
 // Theres no such thing as a dbset for longs :smh:
 
 namespace WhiteboardAPI.Models.Accounts {
+
+	public class AccountContext : DbContext {
+		public AccountContext(DbContextOptions<AccountContext> options)
+			: base(options) {
+		}
+
+		public DbSet<Account> Accounts { get; set; }
+		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+		// bc nothing can be simple, can't wait for efcore 5
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<Account>()
+				.HasMany(acc => acc.JoinedClasses)
+				.WithOne(jcid => jcid.Account)
+				.HasForeignKey(p => p.AccId);
+		}
+	}
+
 	public class Account {
 		// Actual account info
 		[Key]
@@ -17,16 +37,15 @@ namespace WhiteboardAPI.Models.Accounts {
 		public string _name { get; set; }
 		public string _email { get; set; }
 
-		public List<JoinedClassId> JoinedClasses { get; set; } = new List<JoinedClassId> { };
-		// TODO: figure out how to do a one-to-many class relationship
-		// :middle_finger:
+		public List<JoinedClassId> JoinedClasses { get; set; }
 
-		public bool JoinClass (JoinedClassId course) {	
-			if(course == null) {
+
+		public bool JoinClass(JoinedClassId course) {
+			if (course == null) {
 				return false;
 			}
 
-			if(JoinedClasses.Count == 0) {
+			if (JoinedClasses.Count == 0) {
 				this.JoinedClasses.Add(course);
 			} else if (!JoinedClasses.Contains(course)) {
 				this.JoinedClasses.Add(course);
@@ -37,14 +56,14 @@ namespace WhiteboardAPI.Models.Accounts {
 			return true;
 		}
 
-		public bool LeaveClass (JoinedClassId course) {
-			if(course == null) {
+		public bool LeaveClass(JoinedClassId course) {
+			if (course == null) {
 				return false;
 			}
 
 			if (this.JoinedClasses.Contains(course)) {
-				
-				this.JoinedClasses.Remove(course);
+
+				this.JoinedClasses = new List<JoinedClassId>(this.JoinedClasses.Where(x => x != course));
 				return true;
 
 			} else {
@@ -52,14 +71,15 @@ namespace WhiteboardAPI.Models.Accounts {
 				return false;
 			}
 		}
+
 	}
 
 	public class MemberAccountId {
-		// Unfortunately, security is a thing
-		// And you shouldn't just be able to join a random board
-		//
-		// f*ck
 		[Key]
+		public int _id { get; set; }
 		public int accountIdNumber { get; set; }
+		public Course Course { get; set; }
+		public int CourseId { get; set; }
 	}
 }
+
