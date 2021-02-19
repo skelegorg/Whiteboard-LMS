@@ -65,16 +65,6 @@ namespace WhiteboardAPI.Models.Classrooms {
 		}
 	}
 
-	public class JoinedClassId {
-		[Key]
-		public int _id { get; set; }
-		public int classIdNumber { get; set; }
-		public int AccId { get; set; } // foreign key
-
-		public Account Account { get; set; }
-		// :middle_finger:
-	}
-
 	public class CourseDto {
 		public string courseName { get; set; }
 		public string ownerName { get; set; }

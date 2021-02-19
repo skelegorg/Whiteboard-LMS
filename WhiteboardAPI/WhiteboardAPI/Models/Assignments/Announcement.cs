@@ -22,9 +22,9 @@ namespace WhiteboardAPI.Models.Assignments {
 	public class Announcement {
 		public string _Title { get; set; }
 		public string _Content { get; set; }
-		public Stack<Comment> Responses;
+		public Stack<Comment> _comments { get; set; }
 
 		[Key]
-		public long _id { get; set; }
+		public int _id { get; set; }
 	}
 }

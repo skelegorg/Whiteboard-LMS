@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WhiteboardAPI.Models.Assignments;
 using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Models.Other;
 using WhiteboardAPI.Models.Classrooms;
 
 namespace WhiteboardAPI {
@@ -32,8 +33,9 @@ namespace WhiteboardAPI {
             services.AddDbContext<PollContext>(options =>
                 options.UseInMemoryDatabase("WhiteboardAPI"));
 	        services.AddDbContext<AccountContext>(options =>
-		        
-            options.UseInMemoryDatabase("WhiteboardAPI"));
+                options.UseInMemoryDatabase("WhiteboardAPI"));
+            services.AddDbContext<CommentContext>(options =>
+                options.UseInMemoryDatabase("WhiteboardAPI"));
             services.AddControllers(); 
         }
 

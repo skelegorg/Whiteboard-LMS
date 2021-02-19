@@ -8,6 +8,7 @@ using WhiteboardAPI.Data.Data_Seeds;
 using WhiteboardAPI.Resources;
 using WhiteboardAPI.Models.Assignments;
 using WhiteboardAPI.Models.Accounts;
+using WhiteboardAPI.Models.Other;
 
 namespace WhiteboardAPI
 {
@@ -61,6 +62,16 @@ namespace WhiteboardAPI
 				} catch (Exception e) {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
                     logger.LogError(e, "Poll seeding failed.");
+                    ErrorLogger.logError(e);
+				}
+			}
+            var commentContext = scope.ServiceProvider.GetRequiredService<CommentContext>();
+            if (commentContext.Database.EnsureCreated()) {
+                try {
+                    SeedCommentData.Initialize(commentContext);
+				} catch (Exception e) {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(e, "Comment seeding failed.");
                     ErrorLogger.logError(e);
 				}
 			}

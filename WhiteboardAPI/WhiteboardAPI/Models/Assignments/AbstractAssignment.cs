@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using WhiteboardAPI.Resources;
 using WhiteboardAPI.Models.Accounts;
 using WhiteboardAPI.Models.Other;
@@ -14,6 +15,8 @@ namespace WhiteboardAPI.Models.Assignments {
 		//list of assignees and whether or not they completed the assignment
 		//list of submitted assignees and their grade (null until graded)
 		//stack of comments, organized by time made
+		[Key]
+		public int _id { get; set; }
 		public DateTime _assignedDate { get; set; }
 		public DateTime _dueDate { get; set; }
 		public Dictionary<MemberAccountId, bool> _assigneeStatus;

@@ -5,7 +5,6 @@ using WhiteboardAPI.Models.Classrooms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-
 // This file creates a one-to-many relationship between many joined classes and one account.
 // Unfortunately
 // Theres no such thing as a dbset for longs :smh:
@@ -72,6 +71,16 @@ namespace WhiteboardAPI.Models.Accounts {
 			}
 		}
 
+	}
+
+	public class JoinedClassId {
+		[Key]
+		public int _id { get; set; }
+		public int classIdNumber { get; set; }
+		public int AccId { get; set; } // foreign key
+
+		public Account Account { get; set; }
+		// :middle_finger:
 	}
 
 	public class MemberAccountId {

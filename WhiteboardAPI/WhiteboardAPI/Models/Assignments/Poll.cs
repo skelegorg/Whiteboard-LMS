@@ -58,16 +58,6 @@ namespace WhiteboardAPI.Models.Assignments {
 		 
 	}
 	
-	public class voterName {
-		[Key]
-		public int _id { get; set; }
-		// for the one-to-many relationship
-		public PollOption PollOption { get; set; }
-		public int PollOptId { get; set; }
-		public string name { get; set; }
-
-	}
-	
 	public class PollOption {
 		[Key]
 		public int _id { get; set; } 
@@ -78,5 +68,15 @@ namespace WhiteboardAPI.Models.Assignments {
 		public int PollId { get; set; }
 		public List<voterName> voterNames { get; set; }
 		//TODO: add color?
+	}
+
+	public class voterName {
+		[Key]
+		public int _id { get; set; }
+		// for the one-to-many relationship
+		public PollOption PollOption { get; set; }
+		public int PollOptId { get; set; }
+		public string name { get; set; }
+
 	}
 }

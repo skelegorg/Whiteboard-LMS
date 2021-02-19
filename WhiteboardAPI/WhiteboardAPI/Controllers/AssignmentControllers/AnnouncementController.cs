@@ -20,6 +20,8 @@ namespace WhiteboardAPI.Controllers
 			_context = context;
 		}
 
+		static Random rand = new Random();
+
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Announcement>> GetByID(int id)
 		{
@@ -36,10 +38,21 @@ namespace WhiteboardAPI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(Announcement announce)
 		{
-			_context.Announcements.Add(announce);
+			var newAnnounce = new Announcement { _Content = announce._Content, _Title = announce._Title };
+			
+			int newIdAttempt = rand.Next();
+			var testAnnounce = await _context.Announcements.FindAsync(newIdAttempt);
+			while (testAnnounce != null) {
+				newIdAttempt = rand.Next();
+				testAnnounce = await _context.Announcements.FindAsync(newIdAttempt);
+			}
+
+			newAnnounce._id = newIdAttempt;
+
+			_context.Announcements.Add(newAnnounce);
 			await _context.SaveChangesAsync();
 
-			return CreatedAtAction(nameof(GetByID), new { id = announce._id }, announce);
+			return CreatedAtAction(nameof(GetByID), new { id = newAnnounce._id }, newAnnounce);
 		}
 
 		[HttpPut("{id}")]
