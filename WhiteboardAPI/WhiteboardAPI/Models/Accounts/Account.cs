@@ -18,6 +18,7 @@ namespace WhiteboardAPI.Models.Accounts {
 
 		public DbSet<Account> Accounts { get; set; }
 		public DbSet<JoinedClassId> JoinedClassIds { get; set; }
+		public DbSet<MemberAccountId> MemberAccountIds { get; set; }
 		// bc nothing can be simple, can't wait for efcore 5
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {

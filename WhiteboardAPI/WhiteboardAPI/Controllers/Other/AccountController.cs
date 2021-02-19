@@ -132,22 +132,23 @@ namespace WhiteboardAPI.Controllers.Other
 
 			return Ok(classId);
 		}
-		/*
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var announce = await _context.MemberAccountIds.FindAsync(id);
+			var memAcc = await _context.MemberAccountIds.FindAsync(id);
+			var acc = await _context.Accounts.FindAsync(id);
 
-			if (announce == null)
+			if (memAcc == null || acc == null)
 			{
 				return NotFound();
 			}
 
-			_context.MemberAccountIds.Remove(announce);
+			_context.MemberAccountIds.Remove(memAcc);
+			_context.Accounts.Remove(acc);
 			await _context.SaveChangesAsync();
 
 			return NoContent();
 		}
-		*/
 	}
 }
